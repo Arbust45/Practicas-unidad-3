@@ -29,10 +29,10 @@ def leer_alumnosDB():
     return cursor.fetchall()
 
 # Función para agregar un nuevo alumno a la base de datos
-def agregar_alumnoDB(nombre, edad, email):
+def agregar_alumnoDB(id, nombre, edad, email):
     try:
         cursor = db.cursor()
-        cursor.execute("INSERT INTO alumnos (nombre, edad, email) VALUES (%s, %s, %s)", (nombre, edad, email))
+        cursor.execute("INSERT INTO alumnos (id,nombre, edad, email) VALUES (%s,%s, %s, %s)", (id, nombre, edad, email))
         db.commit()
     except mysql.connector.Error as error:
         messagebox.showerror("Error al agregar el alumno", f"No se pudo agregar el alumno: {error}")
@@ -60,20 +60,22 @@ def eliminar_alumnoDB(id):
 def agregar_alumno():
     
     form="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    
     # Obtener los datos del nuevo alumno
     nombre = entrada_nombre.get()
     edad = entrada_edad.get()
     email = entrada_email.get()
-
+    id = entrada_id.get()
+    
     # Validar que los campos no estén vacíos
-    if not nombre or not edad or not email:
+    if not id or not nombre or not edad or not email:
         messagebox.showerror("Error al agregar el alumno", "Por favor ingrese todos los datos del alumno")
         return
     if not re.match(form, email):
         messagebox.showerror("Error", "El correo electrónico no tiene un formato válido")
         return
     # Agregar el nuevo alumno
-    agregar_alumnoDB(nombre, edad, email)
+    agregar_alumnoDB(id,nombre, edad, email)
 
     # Limpiar los campos de entrada
     entrada_nombre.delete(0, END)
@@ -108,10 +110,6 @@ def actualizar_alumno():
     entrada_edad.delete(0, END)
     entrada_email.delete(0, END)
 
-
-
-
-
 # Función para eliminar un alumno existente
 def eliminar_alumno():
     # Obtener el ID del alumno a eliminar
@@ -145,6 +143,12 @@ def ventana_reg():
             tab.withdraw()
             
         tab=Tk()
+        tab.config(bg="coral")
+        tab.title("Alumnos registrados")
+        tab.resizable(0,0)
+        
+        vacio=Label(tab,text=" ",bg="coral")
+        vacio.pack()
         
         tabla=ttk.Treeview(tab)
         tabla["columns"]=('ID','NOMBRE','EDAD','E-MAIL')
@@ -168,10 +172,13 @@ def ventana_reg():
             tabla.insert(parent='', index='end', iid=datos[0], values=(datos[0], datos[1], datos[2], datos[3]))
         tabla.pack()
         
-        botoncito=Button(tab,text="cerrar",command=cerrar)
+        botoncito=Button(tab,text="cerrar",command=cerrar,font="Monaco")
         botoncito.pack()
 
-            
+    def retu():
+        ventana.withdraw()
+        principal()
+        
     # Mostrar la lista de alumnos en la tabla
     global ventana
     global entrada_id
@@ -182,29 +189,32 @@ def ventana_reg():
     ventana = Tk()
     ventana.config(bg="teal")
     ventana.title("Modificar datos")
+    ventana.resizable(0,0)
 
     # Crear los campos de entrada para los datos del alumno
-    Label(ventana, text="Id:",bg="teal").grid(row=0, column=0, padx=5, pady=5)
-    entrada_id = Entry(ventana)
+    Label(ventana, text="Id:",bg="teal",font="Monaco").grid(row=0, column=0, padx=5, pady=5)
+    entrada_id = Entry(ventana,font="Monaco")
     entrada_id.grid(row=0, column=1, padx=5, pady=5)
 
-    Label(ventana, text="Nombre:",bg="teal").grid(row=1, column=0, padx=5, pady=5)
-    entrada_nombre = Entry(ventana)
+    Label(ventana, text="Nombre:",bg="teal",font="Monaco").grid(row=1, column=0, padx=5, pady=5)
+    entrada_nombre = Entry(ventana,font="Monaco")
     entrada_nombre.grid(row=1, column=1, padx=5, pady=5)
 
-    Label(ventana, text="Edad:",bg="teal").grid(row=2, column=0, padx=5, pady=5)
-    entrada_edad = Entry(ventana)
+    Label(ventana, text="Edad:",bg="teal",font="Monaco").grid(row=2, column=0, padx=5, pady=5)
+    entrada_edad = Entry(ventana,font="Monaco")
     entrada_edad.grid(row=2, column=1, padx=5, pady=5)
 
-    Label(ventana, text="Email:",bg="teal").grid(row=3, column=0, padx=5, pady=5)
-    entrada_email = Entry(ventana)
+    Label(ventana, text="Email:",bg="teal",font="Monaco").grid(row=3, column=0, padx=5, pady=5)
+    entrada_email = Entry(ventana,font="Monaco")
     entrada_email.grid(row=3, column=1, padx=5, pady=5)
 
     # Crear los botones para agregar, actualizar y eliminar alumnos
-    Button(ventana, text="Agregar alumno", command=agregar_alumno,bg="light blue").grid(row=0, column=2, padx=5, pady=5)
-    Button(ventana, text="Actualizar alumno", command=actualizar_alumno,bg="light blue").grid(row=1, column=2, padx=5, pady=5)
-    Button(ventana, text="Eliminar alumno", command=eliminar_alumno,bg="light blue").grid(row=2, column=2, padx=5, pady=5)
-    Button(ventana, text="Mostrar alumnos", command=tabl,bg="light blue").grid(row=3,column=2,padx=5,pady=5)
+    Button(ventana, text="Agregar alumno", command=agregar_alumno,bg="light blue",font="Monaco").grid(row=0, column=2, padx=5, pady=5)
+    Button(ventana, text="Actualizar alumno", command=actualizar_alumno,bg="light blue",font="Monaco").grid(row=1, column=2, padx=5, pady=5)
+    Button(ventana, text="Eliminar alumno", command=eliminar_alumno,bg="light blue",font="Monaco").grid(row=2, column=2, padx=5, pady=5)
+    Button(ventana, text="Mostrar alumnos", command=tabl,bg="light blue",font="Monaco").grid(row=3,column=2,padx=5,pady=5)
+    Button(ventana,text="Volver",bg="light blue",font="Monaco",command=retu).grid(row=4,column=2,padx=5,pady=5)
+
 
 
 
@@ -224,6 +234,7 @@ def comprobar():
         else:
             ven.withdraw()
             def Actu():
+
                 def actualizar_alumno2():
                 # Obtener los datos del alumno a actualizar
                     nombre = Nomb.get()
@@ -235,10 +246,11 @@ def comprobar():
                     if not id or not nombre or not edad or not email:
                         messagebox.showerror("Error al actualizar el alumno", "Por favor ingrese todos los datos del alumno")
                         return
-                    
+
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
                         messagebox.showerror("Error al actualizar el alumno", "Por favor ingrese una dirección de correo electrónico válida")
                         return
+
                     # Actualizar el alumno
                     actualizar_alumnoDB(id, nombre, edad, email)
 
@@ -249,49 +261,67 @@ def comprobar():
                     corre.delete(0, END)
                     g.withdraw()
                     comprobar()
+
+                def vol():
+                    g.withdraw()
+                    comprobar()
+
                 ventanita.withdraw()
+
                 g=Tk()
+                g.config(bg="purple")
+                g.title("Actualizar datos")
+                g.geometry("300x325")
+                g.resizable(0,0)
                 
-                Text3=Label(g,text="Ingrese su id")
+                Text3=Label(g,text="Ingrese su id",font="Monaco",bg="purple")
                 Text3.pack()
                 
-                iid=Entry(g)
+                iid=Entry(g,font="Monaco")
                 iid.pack()
                 
-                Text2=Label(g,text=" ")
+                Text2=Label(g,text=" ",bg="purple")
                 Text2.pack()
                 
-                Text1=Label(g,text="Ingrese su nombre")
+                Text1=Label(g,text="Ingrese su nombre",font="Monaco",bg="purple")
                 Text1.pack()
 
-                Nomb=Entry(g)
+                Nomb=Entry(g,font="Monaco")
                 Nomb.pack()
                 
-                Text2_5=Label(g,text="edad")
+                Text2_5=Label(g,text="edad",font="Monaco",bg="purple")
                 Text2_5.pack()
                 
-                ed=Entry(g)
+                ed=Entry(g,font="Monaco")
                 ed.pack()
                 
-                Text3_5=Label(g,text="email")
+                Text3_5=Label(g,text="email",font="Monaco",bg="purple")
                 Text3_5.pack()
                 
-                corre=Entry(g)
+                corre=Entry(g,font="Monaco")
                 corre.pack()
                 
-                Text4=Label(g,text=" ")
+                Text4=Label(g,text=" ",bg="purple")
                 Text4.pack()
 
-                boton=Button(g,text="Ingresar",command=actualizar_alumno2,)
+                boton=Button(g,text="Ingresar",command=actualizar_alumno2,font="Monaco")
                 boton.pack()
+                
+                boton2=Button(g,text="volver",command=vol,font="Monaco")
+                boton2.pack()
 
-        
+            def volver():
+                ventanita.withdraw()
+                principal()
+                    
             ven.withdraw()
             
             ventanita=Tk()
             ventanita.config(bg="chocolate")
+            ventanita.title("Datos registrados")
+            ventanita.resizable(0,0)
             
-            Text6=Label(ventanita,text="BIENVENIDO "+Nombre,bg="chocolate")
+            Text6=Label(ventanita,text="BIENVENIDO "+Nombre,bg="chocolate",font="Monaco")
             Text6.pack()
             
             tabla=ttk.Treeview(ventanita)
@@ -308,7 +338,7 @@ def comprobar():
             tabla.heading('NOMBRE', text='NOMBRE', anchor=CENTER)
             tabla.heading('EDAD', text='EDAD', anchor=CENTER)
             tabla.heading('E-MAIL', text='E-MAIL', anchor=CENTER)
-            
+
             cursor.execute(a, b)
             si = cursor.fetchall()
 
@@ -316,32 +346,46 @@ def comprobar():
                 tabla.insert(parent='', index='end', iid=datos[0], values=(datos[0], datos[1], datos[2], datos[3]))
             tabla.pack()
             
-            boton2=Button(ventanita,bg="white",text="Actualizar datos",command=Actu)
+            boton2=Button(ventanita,bg="white",text="Actualizar datos",command=Actu,font="Monaco")
             boton2.pack()
+            boton3=Button(ventanita,font="Monaco",text="volver",command=volver)
+            boton3.pack()
+            
+def principal():
+    global Nomb
+    global iid
+    global ven
 
+    def cerrar():
+        ven.quit()
 
-ven=Tk()
-ven.title("Sistema de registro")
+    ven=Tk()
+    ven.title("Sistema de registro")
+    ven.config(bg="light green")
+    ven.geometry("285x201")
+    ven.resizable(0,0)
 
-Text1=Label(ven,text="Ingrese su nombre")
-Text1.pack()
+    Text1=Label(ven,text="Ingrese su nombre",bg="light green",font="Monaco")
+    Text1.pack()
 
-Nomb=Entry(ven)
-Nomb.pack()
+    Nomb=Entry(ven,font="Monaco")
+    Nomb.pack()
 
-Text2=Label(ven,text=" ")
-Text2.pack()
+    Text3=Label(ven,text="Ingrese su id",bg="light green",font="Monaco")
+    Text3.pack()
 
-Text3=Label(ven,text="Ingrese su id")
-Text3.pack()
+    iid=Entry(ven,show="*",font="Monaco")
+    iid.pack()
 
-iid=Entry()
-iid.pack()
+    Text4=Label(ven,text=" ",bg="light green")
+    Text4.pack()
 
-Text4=Label(ven,text=" ")
-Text4.pack()
-
-boton=Button(ven,text="Ingresar",command=comprobar)
-boton.pack()
-
-ven.mainloop()
+    boton=Button(ven,text="Ingresar",command=comprobar,bg="green",font="Monaco")
+    boton.pack()
+    
+    boton2=Button(ven,text="Cerrar",command=cerrar,bg="green",font="Monaco")
+    boton2.pack()
+    
+    ven.mainloop()
+    
+principal()
