@@ -243,16 +243,16 @@ def comprobar():
                     id = iid.get()
 
                     # Validar que los campos no estén vacíos
-                    if not id or not nombre or not edad or not email:
+                    if  not nombre or not edad or not email:
                         messagebox.showerror("Error al actualizar el alumno", "Por favor ingrese todos los datos del alumno")
                         return
 
-                    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                    elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
                         messagebox.showerror("Error al actualizar el alumno", "Por favor ingrese una dirección de correo electrónico válida")
                         return
-
-                    # Actualizar el alumno
-                    actualizar_alumnoDB(id, nombre, edad, email)
+                    else:
+                        # Actualizar el alumno
+                        actualizar_alumnoDB(id, nombre, edad, email)
 
                     # Limpiar los campos de entrada
                     iid.delete(0, END)
@@ -260,7 +260,8 @@ def comprobar():
                     ed.delete(0, END)
                     corre.delete(0, END)
                     g.withdraw()
-                    comprobar()
+                    messagebox.showinfo(title="Estado",message="Actualizacion de datos exitosa\nPorfavor inicie sesion nuevamente")
+                    principal()
 
                 def vol():
                     g.withdraw()
@@ -271,37 +272,28 @@ def comprobar():
                 g=Tk()
                 g.config(bg="purple")
                 g.title("Actualizar datos")
-                g.geometry("300x325")
+                g.geometry("275x300")
                 g.resizable(0,0)
                 
-                Text3=Label(g,text="Ingrese su id",font="Monaco",bg="purple")
-                Text3.pack()
-                
-                iid=Entry(g,font="Monaco")
-                iid.pack()
-                
-                Text2=Label(g,text=" ",bg="purple")
-                Text2.pack()
-                
-                Text1=Label(g,text="Ingrese su nombre",font="Monaco",bg="purple")
+                Text1=Label(g,text="Ingrese su nombre",font="Monaco",bg="purple",fg="white")
                 Text1.pack()
 
                 Nomb=Entry(g,font="Monaco")
                 Nomb.pack()
                 
-                Text2_5=Label(g,text="edad",font="Monaco",bg="purple")
+                Text2_5=Label(g,text="edad",font="Monaco",bg="purple",fg="white")
                 Text2_5.pack()
                 
                 ed=Entry(g,font="Monaco")
                 ed.pack()
                 
-                Text3_5=Label(g,text="email",font="Monaco",bg="purple")
+                Text3_5=Label(g,text="email",font="Monaco",bg="purple",fg="white")
                 Text3_5.pack()
                 
                 corre=Entry(g,font="Monaco")
                 corre.pack()
                 
-                Text4=Label(g,text=" ",bg="purple")
+                Text4=Label(g,text=" ",bg="purple",fg="white")
                 Text4.pack()
 
                 boton=Button(g,text="Ingresar",command=actualizar_alumno2,font="Monaco")
