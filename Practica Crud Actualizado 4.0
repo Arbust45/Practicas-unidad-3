@@ -227,9 +227,6 @@ def ventana_reg():
     Button(ventana, text="Mostrar alumnos", command=tabl,bg="light blue",font="Monaco").grid(row=3,column=2,padx=5,pady=5)
     Button(ventana,text="Volver",bg="light blue",font="Monaco",command=retu).grid(row=4,column=2,padx=5,pady=5)
 
-
-
-
 def comprobar():
     try:
         Nombre=Nomb.get()
@@ -267,22 +264,12 @@ def comprobar():
                             else:
                                 # Actualizar el alumno
                                 actualizar_alumnoDB(id, nombre, edad, email)
-                            iid.delete(0, END)
-                            Nomb.delete(0, END)
-                            ed.delete(0, END)
-                            corre.delete(0, END)
                             
                             g.withdraw()
                             messagebox.showinfo(title="Estado",message="Actualizacion de datos exitosa\nPorfavor inicie sesion nuevamente")
                             principal()
                         except ValueError as error:
                             messagebox.showerror(title="Error de valores",message="Sus datos no pudieron ser actualizados\npor el error:"+str(error))
-                            # Limpiar los campos de entrada
-                            iid.delete(0, END)
-                            Nomb.delete(0, END)
-                            ed.delete(0, END)
-                            corre.delete(0, END)
-
 
                     def vol():
                         g.withdraw()
@@ -363,6 +350,7 @@ def comprobar():
                 boton2.pack()
                 boton3=Button(ventanita,font="Monaco",text="volver",command=volver)
                 boton3.pack()
+
     except ValueError as error:
         messagebox.showerror(title="Error de datos",message="El formato del id ingresado no es valido\nfavor de ingresar numeros\nerror:"+str(error))
         iid.delete(0,END)
